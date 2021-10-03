@@ -138,6 +138,14 @@ exports.login = async (req, res) => {
 exports.forgotPassword = async (req, res) => {
   const {id} = req.params;  
   const data = req.body;
+  const loggedUser = req.user.id;
+
+  if(id != loggedUser){
+    return res.send({
+      status: 'failed',
+      message: 'Access denied',
+    })
+  }
 
   const schema = Joi.object({
     password: Joi.string().min(7).required(),

@@ -5,9 +5,22 @@ exports.addTransaction = async (req,res) => {
     const {...data} = req.body;
 
     try {
+        const hasUpload = await transactions.findOne({
+            where: {
+                user_id: req.user.id,
+            }
+        })
+
+        if(hasUpload) {
+            res.send({
+                status: 'failed',
+                message: 'You already sent transfer proof, please wait for admin verification',
+            })
+        }
+
         const newTransaction = await transactions.create({
             ...data,
-            transferProof: process.env.BOOK_IMG_PATH + req.file.filename,
+            transferProof: process.env.IMG_PATH + req.file.filename,
             remainingActive: 0,
             userStatus: "Not Active",
             paymentStatus: "Pending",

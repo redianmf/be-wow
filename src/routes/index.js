@@ -16,7 +16,7 @@ const { editProfile } = require('../controllers/profile')
 const { auth } = require('../middlewares/auth');
 const { uploadFile } = require('../middlewares/uploadFile');
 
-// Create Route here
+// Set Route
 router.get('/users', getUsers);
 router.delete('/user/:id', deleteUser);
 
@@ -38,5 +38,5 @@ router.get('/transactions', auth, getTransactions);
 
 router.patch('/profile/:id', auth, uploadFile('image'), editProfile);
 
-// Export module router here
+// Export module router
 module.exports = router;
