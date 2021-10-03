@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 
 //Import routes
@@ -8,7 +9,10 @@ const port = 5000;
 
 app.use(express.json());
 
-//Create endpoint grouping and router here
+// Router group
 app.use('/api/v1/', router);
+
+// Set public folder
+app.use('/uploads', express.static('uploads'));
 
 app.listen(port, () => console.log(`Listening on port ${port}!`));
