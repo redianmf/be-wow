@@ -1,6 +1,3 @@
-// Import db connection
-const db = require('../database/connection');
-
 // Controllers
 const { users } = require('../../models');
 

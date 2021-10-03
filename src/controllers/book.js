@@ -1,8 +1,5 @@
-// Import db connection
-const db = require('../database/connection');
-
-// Controllers
-const { books, users } = require('../../models');
+// Import models
+const { books } = require('../../models');
 
 exports.getBooks = async (req, res) => {
     try {
@@ -63,7 +60,7 @@ exports.addBook = async (req, res) => {
   
       const newBook = await books.create({
         ...data,
-        bookFile: process.env.BOOK_IMG_PATH + req.file.filename,
+        bookFile: process.env.IMG_PATH + req.file.filename,
         admin_id: req.user.id,
       });
 
@@ -124,7 +121,7 @@ exports.editBook = async (req, res) => {
     try {
     const bookData = {
         ...data,
-        bookFile: process.env.BOOK_IMG_PATH + req.file.filename,
+        bookFile: process.env.IMG_PATH + req.file.filename,
     }
 
     await books.update(bookData, {

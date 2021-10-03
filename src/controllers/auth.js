@@ -1,4 +1,4 @@
-const { users } = require('../../models');
+const { users, profiles } = require('../../models');
 
 const Joi = require('joi');
 const bcrypt = require('bcrypt');
@@ -46,6 +46,10 @@ exports.register = async (req, res) => {
             fullName: data.fullName,
             role: data.role,
         });
+
+        await profiles.create({
+            user_id: regUser.id,
+        })
 
         const dataToken = {
           id: regUser.id,

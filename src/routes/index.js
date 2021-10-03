@@ -9,7 +9,8 @@ const router = express.Router();
 const { getUsers, deleteUser } = require('../controllers/user');
 const { register,login, forgotPassword } = require('../controllers/auth');
 const { getBooks, getBook, addBook, deleteBook, editBook} = require('../controllers/book');
-const { addTransaction, approveTransaction, cancelTransaction, getTransaction, getTransactions } = require('../controllers/transaction')
+const { addTransaction, approveTransaction, cancelTransaction, getTransaction, getTransactions } = require('../controllers/transaction');
+const { editProfile } = require('../controllers/profile')
 
 // Import middleware
 const { auth } = require('../middlewares/auth');
@@ -35,6 +36,7 @@ router.patch('/transaction/cancel/:id', auth, cancelTransaction);
 router.get('/transaction/:id', auth, getTransaction);
 router.get('/transactions', auth, getTransactions);
 
+router.patch('/profile/:id', auth, uploadFile('image'), editProfile);
 
 // Export module router here
 module.exports = router;
