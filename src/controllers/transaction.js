@@ -8,11 +8,12 @@ exports.addTransaction = async (req,res) => {
         const hasUpload = await transactions.findOne({
             where: {
                 user_id: req.user.id,
+                paymentStatus: "Pending",
             }
         })
 
         if(hasUpload) {
-            res.send({
+            return res.send({
                 status: 'failed',
                 message: 'You already sent transfer proof, please wait for admin verification',
             })
@@ -66,76 +67,37 @@ exports.addTransaction = async (req,res) => {
   }
 };
 
-exports.approveTransaction = async (req,res) => {
+exports.editTransaction = async (req,res) => {
     const {...data} = req.body;
     const {id} = req.params;
 
-    try {
-        const transactionData = {
-            ...data,
+    try {  
+        const transactionApprove = {
+            paymentStatus: 'Approve',
             remainingActive: 30,
-            userStatus: "Active",
+            userStatus: 'Active',
         }
-         await transactions.update(transactionData, {
-            where: {
-                id,
-            },
-        });
 
-        const transaction= await transactions.findOne({
-            where: {
-                id,
-            },
-            attributes: {
-                exclude: ['createdAt', 'updatedAt', 'book_id', 'admin_id', 'user_id'],
-            },
-            include: [{
-                model: users,
-                    as: 'user',
-                    attributes: {
-                        exclude: ['createdAt', 'updatedAt', 'email', 'password', 'role',]
-                    }
-            }]
-        })
+        const transactionCancel = {
+            paymentStatus: 'Cancel',
+            remainingActive: 0,
+            userStatus: 'Not Active',
+        }
 
-        res.send({
-            status: 'success',
-            data: {
-                transaction: {
-                    id: transaction.id,
-                    user: transaction.user,
+        if(data.paymentStatus == "Approve"){
+            await transactions.update(transactionApprove, {
+                where: {
+                    id,
                 },
-                transferProof: transaction.transferProof,
-                remainingActive: transaction.remainingActive,
-                userStatus: transaction.userStatus,
-                paymentStatus: transaction.paymentStatus,
-            }
-        });
-
-    } catch (error) {
-    console.log(error);
-    res.status(500).send({
-      status: 'failed',
-      message: 'Server Error',
-    });
-  }
-};
-
-exports.cancelTransaction = async (req,res) => {
-    const {...data} = req.body;
-    const {id} = req.params;
-
-    try {
-        const transactionData = {
-            "remainingActive": 0,
-            "userStatus": "Not Active",
-            ...data,
+            });
+        } else {
+            await transactions.update(transactionCancel, {
+                where: {
+                    id,
+                },
+            });
+            
         }
-         await transactions.update(transactionData, {
-            where: {
-                id,
-            },
-        });
 
         const transaction= await transactions.findOne({
             where: {

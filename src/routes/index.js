@@ -9,8 +9,8 @@ const router = express.Router();
 const { getUsers, deleteUser } = require('../controllers/user');
 const { register,login, forgotPassword } = require('../controllers/auth');
 const { getBooks, getBook, addBook, deleteBook, editBook} = require('../controllers/book');
-const { addTransaction, approveTransaction, cancelTransaction, getTransaction, getTransactions } = require('../controllers/transaction');
-const { editProfile } = require('../controllers/profile')
+const { addTransaction, editTransaction, getTransaction, getTransactions } = require('../controllers/transaction');
+const { editProfile, getProfile } = require('../controllers/profile')
 
 // Import middleware
 const { auth } = require('../middlewares/auth');
@@ -31,12 +31,12 @@ router.patch('/book/:id', auth, uploadFile('image'), editBook);
 router.delete('/book/:id', auth, deleteBook);
 
 router.post('/transaction', auth, uploadFile('image'), addTransaction);
-router.patch('/transaction/:id', auth, approveTransaction);
-router.patch('/transaction/cancel/:id', auth, cancelTransaction);
+router.patch('/transaction/:id', auth, editTransaction);
 router.get('/transaction/:id', auth, getTransaction);
 router.get('/transactions', auth, getTransactions);
 
 router.patch('/profile/:id', auth, uploadFile('image'), editProfile);
+router.get('/profile/:id', auth, getProfile);
 
 // Export module router
 module.exports = router;

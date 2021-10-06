@@ -47,3 +47,39 @@ exports.editProfile = async (req, res) => {
       });
     }
 };
+
+exports.getProfile = async (req, res) => {
+    const {id} = req.params;
+
+    try {
+    const profile = await profiles.findOne({
+        where: {
+            user_id: id,
+        },
+        attributes: {
+            exclude: ['createdAt', 'updatedAt', 'user_id'],
+        },
+        include: [{
+            model: users,
+                as: 'users',
+                attributes: {
+                    exclude: ['createdAt', 'updatedAt', 'fullName', 'password', 'role',]
+                }
+        }]
+    });
+  
+      res.send({
+        status: 'success',
+        data : {
+           profile,
+        }
+    });
+  
+    } catch (error) {
+      console.log(error);
+      res.send({
+        status: 'failed',
+        message: 'Server Error',
+      });
+    }
+};
